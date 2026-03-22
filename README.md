@@ -57,7 +57,11 @@ npm run dev
 
 The platform currently operates with a "One-Screen Hub" philosophy, optimized for speed and visual impact.
 
-### 1. NEXUS Authentication Hub
+### 1. Always-On Deployment Optimization
+- **NEXUS Keep-Alive**: A GitHub Action (`.github/workflows/keep-alive.yml`) pings the backend every 10 minutes to prevent Render's free tier from sleeping.
+- **Vercel SPA Sovereignty**: A `vercel.json` configuration ensures that page refreshes on sub-routes never trigger a 404, keeping the SPA routing intact.
+
+### 2. NEXUS Authentication Hub
 - **Brutalist Branding**: Sharp 90-degree corners and a heavyweight "Shield" identity.
 - **One-Screen Precision**: Zero-scroll authentication portals (Login & Register) with explicit header-safety padding.
 - **Nodal Transitions**: High-fidelity motion transitions for state changes.
