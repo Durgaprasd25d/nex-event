@@ -81,7 +81,7 @@ const Register = () => {
           <div className="flex flex-col gap-8 h-full">
             {/* Panel Header */}
             <div className="flex items-center gap-4">
-              <Shield size={22} className="text-on-surface opacity-70" />
+              <img src="/assets/nexus_logo.png" alt="Logo" className="w-8 h-8 object-contain" />
               <span className="text-base font-black tracking-[0.25em] uppercase text-on-surface">
                 NEXUS<span className="text-primary-neon">.</span>
               </span>

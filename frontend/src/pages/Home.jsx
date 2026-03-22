@@ -56,7 +56,7 @@ const Home = () => {
         <div className="asymmetric-grid items-center">
           <motion.div variants={itemVariants} className="text-left flex flex-col gap-8">
             <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-primary-electric/10 border border-primary-electric/20 rounded-full text-xs font-bold text-primary-neon tracking-[0.25em] uppercase w-fit">
-              <Zap size={14} className="animate-pulse" />
+              <img src="/assets/nexus_logo.png" alt="Logo" className="w-4 h-4 object-contain" />
                Event Excellence
             </div>
             

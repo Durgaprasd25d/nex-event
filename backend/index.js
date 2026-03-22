@@ -18,7 +18,12 @@ const server = http.createServer(app);
 initSocket(server);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: true, // Reflects the request origin (for testing/multi-domain)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
@@ -28,6 +33,9 @@ app.use('/api/registrations', registrationRoutes);
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/feedback', require('./routes/feedbackRoutes'));
 
+app.use('/', (req, res) => {
+  res.send("Server Running");
+})
 // Database Connection
 mongoose
   .connect(process.env.MONGODB_URI)

@@ -25,8 +25,8 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 nav-glass py-5 transition-all duration-300">
       <div className="container flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-3 no-underline group px-4">
-          <Zap size={20} className="text-primary-neon fill-primary-neon/10" />
+        <Link to="/" className="flex items-center gap-4 no-underline group px-4">
+          <img src="/assets/nexus_logo.png" alt="Nexus" className="w-8 h-8 object-contain shadow-glow" />
           <span className="text-xl font-black tracking-tighter text-on-surface">
             NEXUS<span className="text-primary-neon">.</span>
           </span>

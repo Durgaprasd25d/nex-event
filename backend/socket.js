@@ -5,8 +5,9 @@ let io;
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: '*', // In production, replace with your frontend URL
-      methods: ['GET', 'POST']
+      origin: true,
+      methods: ['GET', 'POST', 'OPTIONS'],
+      credentials: true
     }
   });
 
