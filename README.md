@@ -2,54 +2,28 @@
 
 **NEXUS** is a high-fidelity, industrial-grade event management platform designed for elite organizers and seamless coordination. It features real-time seat mapping, room-based nodal discussions, and a bold, brutalist visual identity.
 
----
+## 🚀 Production Launch Blueprint (Step-by-Step)
 
-## 🚀 Rapid Deployment (Fresh Start)
+To move from local development to the "Always-On" NEXUS ecosystem, follow these exact dashboard steps.
 
-Follow these steps to initialize the environment and launch the dual-stack architecture.
+### 🛡 1. Render Deployment (Backend)
+1.  **New Web Service**: Connect your GitHub repository.
+2.  **Root Directory**: Set to `backend`.
+3.  **Build Command**: `npm install`.
+4.  **Start Command**: `node index.js`.
+5.  **Environment Variables**:
+    - `NODE_ENV`: Set to **`production`** (This triggers the production `config.js`).
+    - `MONGODB_URI`: Your MongoDB Atlas connection string.
+    - `JWT_SECRET`: A secure, secret key for NEXUS identity.
+    - `PORT`: 5000 (Render will handle this, but explicit is fine).
 
-### 1. Repository Initialization
-Clone the repository and enter the workspace:
-```bash
-git clone <repository_url>
-cd "Event Management"
-```
-
-### 2. Backend Configuration
-Navigate to the `backend` directory and set up the industrial core:
-```bash
-cd backend
-npm install
-```
-Create a `.env` file in the `backend/` root:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_nexus_secure_key
-```
-Seed the initial database with elite events:
-```bash
-node seed.js
-```
-Launch the server (Develop Mode):
-```bash
-npm run dev
-```
-
-### 3. Frontend Configuration
-Open a new terminal, navigate to the `frontend` directory:
-```bash
-cd frontend
-npm install
-```
-Create a `.env` file in the `frontend/` root:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-Launch the interface:
-```bash
-npm run dev
-```
+### 🌐 2. Vercel Deployment (Frontend)
+1.  **New Project**: Import your GitHub repository.
+2.  **Framework Preset**: Select **`Vite`**.
+3.  **Root Directory**: Set to **`frontend`**.
+4.  **Environment Variables**:
+    - `VITE_APP_ENV`: Set to **`production`** (This points to the Render domain instead of localhost).
+    - `VITE_API_URL`: `https://nex-event.onrender.com/api` (Optional but ensures direct routing).
 
 ---
 
