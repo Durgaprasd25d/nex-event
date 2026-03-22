@@ -1,11 +1,12 @@
 const { Server } = require('socket.io');
+const config = require('./config/config.js');
 
 let io;
 
 const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: true,
+      origin: config.ALLOWED_ORIGINS,
       methods: ['GET', 'POST', 'OPTIONS'],
       credentials: true
     }

@@ -1,0 +1,14 @@
+const env = import.meta.env.VITE_APP_ENV === 'production' ? 'prod' : 'dev';
+
+const config = {
+  dev: {
+    API_URL: 'http://localhost:5000/api',
+    SOCKET_URL: 'http://localhost:5000'
+  },
+  prod: {
+    API_URL: 'https://nex-event.onrender.com/api',
+    SOCKET_URL: 'https://nex-event.onrender.com'
+  }
+};
+
+export default config[env];

@@ -1,12 +1,10 @@
 import { io } from 'socket.io-client';
+import config from '../config';
 
-// Helper to strip /api from the URL to get the base domain for Socket.io
-const getBaseUrl = (apiUrl) => {
-  if (!apiUrl) return 'http://localhost:5000';
-  return apiUrl.replace(/\/api$/, '');
-};
+const socketUrl = import.meta.env.VITE_API_URL 
+  ? import.meta.env.VITE_API_URL.replace(/\/api$/, '') 
+  : config.SOCKET_URL;
 
-const socketUrl = getBaseUrl(import.meta.env.VITE_API_URL);
 const socket = io(socketUrl, {
   autoConnect: true,
   reconnection: true,
