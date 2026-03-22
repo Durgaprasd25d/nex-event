@@ -100,18 +100,18 @@ const NodeDiscussion = ({ user, eventId, isRegistered }) => {
             key={msg._id || i}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`flex flex-col ${msg.user?._id === user?._id ? 'items-end' : 'items-start'}`}
+            className={`flex flex-col ${(msg.user?._id || msg.user?.id) === (user?._id || user?.id) ? 'items-end' : 'items-start'}`}
           >
             <div className="flex items-center gap-2 mb-2">
               {msg.user?.role === 'admin' && <Shield size={10} className="text-primary-neon" />}
               <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest">
-                {msg.user?.name} {msg.user?._id === user?._id && '(You)'}
+                {msg.user?.name} {(msg.user?._id || msg.user?.id) === (user?._id || user?.id) && '(You)'}
               </span>
               <span className="text-[8px] text-on-surface-variant/40 font-bold uppercase">
                 {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <div className={`max-w-[85%] p-4 rounded-2xl text-xs font-medium leading-relaxed ${msg.user?._id === user?._id
+            <div className={`max-w-[85%] p-4 rounded-2xl text-xs font-medium leading-relaxed ${(msg.user?._id || msg.user?.id) === (user?._id || user?.id)
                 ? 'bg-primary-neon/10 border border-primary-neon/30 text-white rounded-tr-none'
                 : 'bg-bg-obsidian/60 border border-ghost-border text-on-surface rounded-tl-none'
               }`}>
