@@ -18,13 +18,15 @@ const server = http.createServer(app);
 // Initialize Socket.io
 initSocket(server);
 
-// Middleware
-app.use(cors({
-  origin: config.ALLOWED_ORIGINS,
+const corsOptions = {
+  origin: config.resolveCorsOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}));
+};
+
+// Middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes

@@ -6,8 +6,8 @@ const config = {
     SOCKET_URL: 'http://localhost:5000'
   },
   prod: {
-    API_URL: 'https://nex-event.onrender.com/api',
-    SOCKET_URL: 'https://nex-event.onrender.com'
+    API_URL: 'https://nex-event-b5wl.onrender.com/api',
+    SOCKET_URL: 'https://nex-event-b5wl.onrender.com'
   }
 };
 
