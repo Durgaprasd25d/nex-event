@@ -28,6 +28,12 @@ const EventCard = ({ event }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-bg-obsidian/80 via-transparent to-transparent pointer-events-none" />
         
         {/* Status Badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <div className="px-2.5 py-1 bg-primary-neon/10 backdrop-blur-md border border-primary-neon/20 rounded-full text-[9px] font-black text-primary-neon uppercase tracking-widest italic">
+            {event.category?.name || 'Event'}
+          </div>
+        </div>
+
         <div className="absolute top-3 right-3 flex gap-2">
           {isSoldOut ? (
             <div className="px-2.5 py-1 bg-bg-obsidian/80 backdrop-blur-md border border-error-neon/20 rounded-full text-[9px] font-bold text-error-neon uppercase tracking-widest">

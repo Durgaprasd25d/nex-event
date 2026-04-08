@@ -17,7 +17,7 @@ const seedData = async () => {
     // Create an Admin
     const admin = new User({
       name: 'Admin User',
-      email: 'admin@evently.com',
+      email: 'tattoworld83@gmail.com',
       password: 'password123',
       role: 'admin'
     });

@@ -33,6 +33,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
+app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/feedback', require('./routes/feedbackRoutes'));
 

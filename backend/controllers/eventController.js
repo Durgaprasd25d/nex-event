@@ -3,7 +3,9 @@ const Registration = require('../models/Registration');
 
 exports.getEvents = async (req, res) => {
   try {
-    const events = await Event.find().populate('creator', 'name');
+    const { category } = req.query;
+    const filter = category && category !== 'All' ? { category } : {};
+    const events = await Event.find(filter).populate('creator', 'name').populate('category');
     res.json(events);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -12,7 +14,7 @@ exports.getEvents = async (req, res) => {
 
 exports.getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate('creator', 'name');
+    const event = await Event.findById(req.params.id).populate('creator', 'name').populate('category');
     if (!event) return res.status(404).json({ message: 'Event not found' });
     res.json(event);
   } catch (err) {
@@ -22,7 +24,7 @@ exports.getEventById = async (req, res) => {
 
 exports.createEvent = async (req, res) => {
   try {
-    const { title, description, date, location, capacity, rows, cols, tags, entryCutoff, timeline } = req.body;
+    const { title, description, category, date, location, capacity, rows, cols, tags, entryCutoff, timeline } = req.body;
     const image = req.file ? req.file.path : req.body.image; 
 
     const parsedTimeline = typeof timeline === 'string' ? JSON.parse(timeline) : timeline;
@@ -30,6 +32,7 @@ exports.createEvent = async (req, res) => {
     const event = new Event({
       title,
       description,
+      category,
       date,
       location,
       capacity: capacity || (rows * cols),

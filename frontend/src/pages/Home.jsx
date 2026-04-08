@@ -12,16 +12,22 @@ const FEAT_ANA = '/assets/feature_analytics_1773857910076.png';
 const Home = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetchEvents();
+    fetchData();
   }, []);
 
-  const fetchEvents = async () => {
+  const fetchData = async () => {
     try {
-      const { data } = await api.get('/events');
-      setEvents(data);
+      const [eventsRes, catsRes] = await Promise.all([
+        api.get('/events'),
+        api.get('/categories')
+      ]);
+      setEvents(eventsRes.data);
+      setCategories(catsRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -29,10 +35,12 @@ const Home = () => {
     }
   };
 
-  const filteredEvents = events.filter(event => 
-    event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    event.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          event.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || event.category?._id === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -199,6 +207,33 @@ const Home = () => {
             <span className="w-2 h-2 rounded-full bg-primary-neon animate-pulse"></span>
             {filteredEvents.length} Active Events
           </div>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="flex items-center gap-4 mb-12 overflow-x-auto pb-4 scrollbar-hide">
+          <button
+            onClick={() => setSelectedCategory('All')}
+            className={`px-8 py-3 rounded-xl border text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap ${
+              selectedCategory === 'All'
+              ? 'bg-primary-neon/10 border-primary-neon text-primary-neon shadow-[0_0_20px_rgba(144,171,255,0.2)]'
+              : 'bg-surface-low border-ghost-border text-on-surface-variant hover:border-primary-neon/30 hover:text-white'
+            }`}
+          >
+            All
+          </button>
+          {categories.map(cat => (
+            <button
+              key={cat._id}
+              onClick={() => setSelectedCategory(cat._id)}
+              className={`px-8 py-3 rounded-xl border text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap ${
+                selectedCategory === cat._id
+                ? 'bg-primary-neon/10 border-primary-neon text-primary-neon shadow-[0_0_20px_rgba(144,171,255,0.2)]'
+                : 'bg-surface-low border-ghost-border text-on-surface-variant hover:border-primary-neon/30 hover:text-white'
+              }`}
+            >
+              {cat.name}
+            </button>
+          ))}
         </div>
 
         {loading ? (

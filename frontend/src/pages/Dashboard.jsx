@@ -19,6 +19,23 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [pulseCount, setPulseCount] = useState(142);
 
+  const handleDownload = async (regId) => {
+    try {
+      const response = await api.get(`/registrations/${regId}/ticket`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `NEXUS-TICKET-${regId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      alert('Failed to download ticket');
+    }
+  };
+
   const fetchDashboardData = useCallback(async () => {
     try {
       if (isAdmin) {
@@ -338,9 +355,16 @@ const Dashboard = () => {
                          <EventCard event={reg.event} />
                          <div className="absolute top-6 right-6 z-20">
                             <div className="px-5 py-2.5 bg-primary-electric border border-primary-neon shadow-[0_0_20px_rgba(49,107,243,0.5)] rounded-xl text-[10px] font-black tracking-[0.2em] text-white uppercase italic transform group-hover:-rotate-3 transition-transform">
-                                SEAT CODE: {reg.seatNumber}
-                            </div>
-                          </div>
+                                 SEAT CODE: {reg.seatNumber}
+                             </div>
+                           </div>
+                           <button 
+                             onClick={() => handleDownload(reg._id)}
+                             className="absolute bottom-6 right-6 z-20 btn-nocturnal !py-3 !px-6 !bg-bg-obsidian/80 backdrop-blur-md border border-ghost-border hover:border-primary-neon text-white flex items-center justify-center gap-2 group shadow-2xl"
+                           >
+                             <Download size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                             <span className="uppercase tracking-widest text-[9px] font-black">Get Ticket</span>
+                           </button>
                       </div>
                     ))
                   )}
