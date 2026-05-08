@@ -96,7 +96,7 @@ const CreateEvent = () => {
       formDataToSend.append('timeline', JSON.stringify(filteredTimeline));
 
       const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-      tagsArray.forEach(tag => formDataToSend.append('tags[]', tag));
+      tagsArray.forEach(tag => formDataToSend.append('tags', tag));
 
       if (formData.image) {
         formDataToSend.append('image', formData.image);
@@ -113,7 +113,21 @@ const CreateEvent = () => {
     }
   };
 
-  const nextStep = () => setStep(step + 1);
+  const nextStep = () => {
+    if (step === 1) {
+      if (!formData.title || !formData.description || !formData.category) {
+        alert('Please complete all required fields (Name, Description, Category) before proceeding.');
+        return;
+      }
+    }
+    if (step === 2) {
+      if (!formData.date || !formData.location || !formData.capacity) {
+        alert('Please complete all required spatial and temporal fields (Date, Location, Capacity) before proceeding.');
+        return;
+      }
+    }
+    setStep(step + 1);
+  };
   const prevStep = () => setStep(step - 1);
 
   const stepVariants = {
