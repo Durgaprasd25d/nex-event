@@ -2,7 +2,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendOTP } = require('../utils/mail');
 
-const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+const generateOTP = () => {
+  if (process.env.OTP_USE === 'true') {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+  return '123456'; // Default bypass OTP
+};
 
 exports.register = async (req, res) => {
   try {
@@ -10,27 +15,46 @@ exports.register = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
-    const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    if (process.env.OTP_USE === 'true') {
+      const otp = generateOTP();
+      const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
-    const user = new User({ 
-      name, 
-      email, 
-      password, 
-      role,
-      otp,
-      otpExpires,
-      isVerified: false 
-    });
-    
-    await user.save();
-    await sendOTP(email, otp);
+      const user = new User({ 
+        name, 
+        email, 
+        password, 
+        role,
+        otp,
+        otpExpires,
+        isVerified: false 
+      });
+      
+      await user.save();
+      await sendOTP(email, otp);
 
-    res.status(201).json({ 
-      message: 'Registration initiated. Please verify your identity via email.',
-      needsVerification: true,
-      email 
-    });
+      res.status(201).json({ 
+        message: 'Registration initiated. Please verify your identity via email.',
+        needsVerification: true,
+        email 
+      });
+    } else {
+      const user = new User({ 
+        name, 
+        email, 
+        password, 
+        role,
+        isVerified: true 
+      });
+      
+      await user.save();
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+      res.status(201).json({ 
+        message: 'Registration successful.',
+        token,
+        user: { id: user._id, _id: user._id, name: user.name, email: user.email, role: user.role }
+      });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -44,18 +68,30 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const otp = generateOTP();
-    user.otp = otp;
-    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
-    await user.save();
+    if (process.env.OTP_USE === 'true') {
+      const otp = generateOTP();
+      user.otp = otp;
+      user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+      await user.save();
+      await sendOTP(email, otp);
 
-    await sendOTP(email, otp);
-
-    res.json({ 
-      message: 'Authorization required. Pulse sent to your identity email.',
-      needsVerification: true,
-      email 
-    });
+      res.json({ 
+        message: 'Authorization required. Pulse sent to your identity email.',
+        needsVerification: true,
+        email 
+      });
+    } else {
+      // Direct login bypass
+      if (!user.isVerified) {
+        user.isVerified = true;
+        await user.save();
+      }
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+      res.json({ 
+        token, 
+        user: { id: user._id, _id: user._id, name: user.name, email: user.email, role: user.role } 
+      });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -101,7 +137,11 @@ exports.resendOTP = async (req, res) => {
     user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    await sendOTP(email, otp);
+    if (process.env.OTP_USE === 'true') {
+      await sendOTP(email, otp);
+    } else {
+      console.log(`[BYPASS MODE] OTP for ${email}: ${otp}`);
+    }
     res.json({ message: 'Fresh authorization pulse emitted.' });
   } catch (err) {
     res.status(500).json({ message: err.message });
